@@ -74,7 +74,21 @@ app
     // Updates the note with the given title. 
     // The new body is provided in the request body.
     .put((req,res) => {
-
+        const noteToUpdate = req.params.title;
+        
+        let notes = readFile();
+        
+        for (let note of notes) {
+            if (noteToUpdate === note.title) {
+                const userBody = req.body.userBody;
+                
+                note.body = userBody;
+                writeFile(notes);
+                res.json({message: "Note updated successfully!"});
+                return;
+            }
+        }
+        res.status(404).json({message: "Note not found."});    
     })
 
 app.listen(3000, function () {
